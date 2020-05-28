@@ -1,0 +1,4 @@
+{
+    "mongoURI": "mongodb+srv://shaluc:1234@cluster0-z8plj.mongodb.net/test?retryWrites=true&w=majority",
+    "jwtSecret": "mynativeplace"
+}
