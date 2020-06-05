@@ -1,9 +1,9 @@
-import React, {  useEffect } from 'react';
+import React, {  useEffect, useState } from 'react';
 import { connect, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getHomestays } from '../../actions/homestay';
 
-/* const initialState = {
+const initialState = {
     type: '',
     capacity: '',
     price: '',
@@ -13,9 +13,9 @@ import { getHomestays } from '../../actions/homestay';
     maxSize: '',
     breakfast: '',
     pat: '',
-    sortedhomestays: []
-}; */
-
+    searchPhrase: '',
+    // sortedhomestays: [],
+};
 
 const HomeStayList = ({
     getHomestays,
@@ -26,21 +26,38 @@ const HomeStayList = ({
       loading
     }
   }) => {
-  useEffect(() => {
-    getHomestays();
-  }, [getHomestays]);
+  const [ filteredHomestays, filterHomestays ] = useState([]);
+  const setFilteredHomestays = (homestays) => {
+    filterHomestays(homestays);
+  }
 
-  console.log('homestays', homestays);
+  useEffect(() => {
+    if (homestays.length < 1) getHomestays();
+    setFilteredHomestays(homestays);
+  }, [homestays]);
+
 
   // homestay list-items
-  const listItems = homestays.map((homestay) =>
+  const listItems = filteredHomestays.map((homestay) =>
     <li key={homestay._id}>
       {homestay.name}
     </li>
   );
 
+  // search
+  const searchHomestay = (phrase) => {
+      const filteredHomestays = homestays.filter(homestay => homestay.name.toLowerCase().includes(phrase.toLowerCase()));
+      setFilteredHomestays(filteredHomestays);
+  }
+
   return (
     <div>
+      <div className="homestay-list__search">
+        <input
+          type="text"
+          placeholder="Search Homestay"
+          onChange={event => searchHomestay(event.target.value)} />
+      </div>
       <ul className="homestay-list">
         {listItems}
       </ul>
