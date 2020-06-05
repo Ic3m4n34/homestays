@@ -7,7 +7,7 @@ import HomestayContainer from './HomestayContainer';
 
 const HomeStays = () => {
   return (
-  <>  
+  <>
     <Hero>
       <Banner title="Our Homestays">
         <Link to= "/" className="btn-primary">
@@ -16,7 +16,7 @@ const HomeStays = () => {
       </Banner>
     </Hero>
     <HomestayContainer></HomestayContainer>
-  </>  
+  </>
   )
 }
 

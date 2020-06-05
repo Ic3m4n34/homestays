@@ -18,7 +18,7 @@ export const getCurrentHomestay = () => async dispatch => {
             payload: res.data
         });
     } catch(err) {
-        dispatch({ 
+        dispatch({
             type: HOMESTAY_ERROR,
             payload: { msg: err.response.statusText, status: err.response.status    }
         });
@@ -26,11 +26,12 @@ export const getCurrentHomestay = () => async dispatch => {
 };
 // Get all homestays
 export const getHomestays = () => async dispatch => {
+  console.log('action');
   dispatch({ type: CLEAR_HOMESTAY });
 
   try {
     const res = await axios.get('/api/homestay');
-    
+
     dispatch({
       type: GET_HOMESTAYS,
       payload: res.data
@@ -70,7 +71,7 @@ export const createHomestay = (
           'Content-Type': 'application/json'
         }
       };
-      
+
       const res = await axios.post('/api/homestay', formData, config);
       console.log('inside createHomestay action and value of res is ', res);
 
@@ -78,19 +79,19 @@ export const createHomestay = (
         type: GET_HOMESTAY,
         payload: res.data
       });
-  
+
       dispatch(setAlert(edit ? 'Homestay Updated' : 'Homestay Created', 'success'));
-  
+
       if (!edit) {
         history.push('/dashboard');
       }
     } catch (err) {
       const errors = err.response.data.errors;
-  
+
       if (errors) {
         errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
       }
-  
+
       dispatch({
         type: HOMESTAY_ERROR,
         payload: { msg: err.response.statusText, status: err.response.status }
