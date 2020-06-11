@@ -1,171 +1,177 @@
-import React,{ Fragment, useEffect, useState }  from 'react';
-import {getHomestays } from '../../actions/homestay';
+import React, {  useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import SingleHomeStay from './SingleHomeStay';
-import Title from './Title';
-import {Spinner} from '../layout/Spinner';
+import { getHomestays } from '../../actions/homestay';
 
-const initialState = {
-    type: '',
-    capacity: '',
-    price: '', 
-    minPrice: '',
-    maxPrice: '',
-    minSize: '',
-    maxSize: '',
-    breakfast: '',
-    pat: '',
-    sortedhomestays:[]
-};  
-const  HomestayList = ({ getHomestays, homestay: { homestays,capacity,sortedhomestays,loading } }) => {
-        useEffect(() => {
-          getHomestays();  
-        }, [getHomestays]);
-      
-const [formData, setFormData] = useState(initialState);
+const HomeStayList = ({
+    getHomestays,
+    homestay: {
+      homestays,
+      sortedhomestays,
+      loading
+    }
+  }) => {
+  // state
+  const [ filteredHomestays, setFilteredHomestays ] = useState([]);
 
-capacity = parseInt(capacity);  
+  // selected room type
+  let [selectedType, setSelectedType] = useState('all');
 
-useEffect(() => {
-    if (!homestays) getHomestays();
-    if (!loading) {
-      const homestayData = { ...initialState };
-      for (const key in homestays) {
-        if (key in homestayData) homestayData[key] = homestays[key];
+  // room types
+  const [types, setTypes] = useState([]);
+
+  // selected capacity
+  const [selectedCapacity, setSelectedCapacity] = useState('');
+
+  // capacities
+  let [capacities, setCapacities] = useState(null);
+
+  // set search phrase
+  const [searchPhrase, setSearchPhrase] = useState('');
+  // state end
+
+  // get all unique values
+  const getUnique = (items, value) => {
+    return [...new Set(items.map(item => item[value]))];
+  };
+
+  useEffect(() => {
+    if (homestays.length < 1) {
+      getHomestays();
+    } else {
+      setFilteredHomestays(homestays);
+      console.log('initial on load', filteredHomestays);
+    }
+    // get types + add all + map to jsx and state
+    let uniqueTypes = getUnique(homestays, 'type');
+    uniqueTypes = ['all', ...uniqueTypes];
+
+    const mappedUniqueTypes = uniqueTypes.map((item, i) => {
+      return (
+      <option value={item} key={i}>{item}</option>
+      );
+    });
+
+    setTypes(mappedUniqueTypes);
+
+    // get capacities
+    capacities = getUnique(homestays, 'capacity');
+    capacities = [0, ...capacities];
+
+    capacities = capacities.map((item, i) => {
+      if (item === 0) {
+        return (
+          <option value={0} key={i}>Select Capacity</option>
+        );
       }
-      setFormData(homestayData);
-       console.log('homestayData in begining', homestayData);
+      return (
+        <option value={item} key={i}>{item}</option>
+      );
+    });
+
+    setCapacities(capacities);
+
+  }, [homestays]);
+
+  const handleChange = (e) => {
+    const type = e.target.type;
+    const name = e.target.name;
+    const value = e.target.value;
+    const isSearch = e.target.id === 'search';
+
+    console.log('type: ', type, 'name:', name, 'val:', value);
+
+    if (name === 'type') {
+      setSelectedType(value);
     }
-  }, [loading, getHomestays, homestays]);
- 
-// define the Unique function
-const getUnique = (item,value)=> {
-    return [...new Set(item.map(item => item[value]))]
-  } 
-// get Unique Types   
-let types = getUnique(homestays,'type');
-// add all
-if(types !==  ''){
-types = ['all',...types];
-}
-// map to jsx
-types= types.map((item,index)=> {
-    return <option value={item} key={index}>{item}</option>
-})
-//get unique capacity
-let cap = getUnique(homestays,'capacity');
+    if (name === 'capacity' && value !== 0) {
+      setSelectedCapacity(parseInt(value));
+    }
+    if (isSearch) {
+      console.log('phrase', value);
+      setSearchPhrase(value);
+    }
+  }
 
-//add all
-if(cap !== ''){
-    cap = [1,...cap];
-}
-//map to jsx
-cap = cap.map((item,index) => {
-    return <option value={item} key={index}>{item}</option>
-})
-
-const handleChange  = async (event) =>  { 
-    const target= event.target
-    const value = event.type === 'checkbok' ?
-    target.checked : target.value
-    const name = event.target.name
-    
-    setFormData({
-       // ...homestays,
-       sortedhomestays : [],
-       [name]: value
-//}, filterStays())
-    })   
-};  
-useEffect(() => {
+  useEffect(() => {
     let tempHomestays = [...homestays];
-    // filter by capacity
-    if(capacity !== 1){
-        tempHomestays = tempHomestays.filter(stay => stay.capacity >= formData.capacity)
+
+    if (selectedType !== 'all') {
+      tempHomestays = tempHomestays.filter(homestay => homestay.type === selectedType);
     }
 
-    //filter by type
-    if(formData.type !== 'all') {
-     tempHomestays = tempHomestays.filter(stay => stay.type === formData.type )
-    }     
+    if (selectedCapacity !== 0) {
+      tempHomestays = tempHomestays.filter(homestay => homestay.capacity === selectedCapacity);
+    }
 
-      for(var i=0;i<tempHomestays.length;i++) {      
-          console.log('am in sortedhome stay loop', tempHomestays.length)                  
-        sortedhomestays.push(tempHomestays[i])
-        }
-        console.log('tempHomestays', tempHomestays);
-     //   setFormData(sortedhomestays);
-     // setFormData ([...sortedhomestays, ...tempHomestays ]);
-      //  setFormData({...formData,[sortedhomestays]: [tempHomestays]  }); 
-},[formData]);
- 
+    if (searchPhrase.length > 2) {
+      tempHomestays = tempHomestays.filter(homestay => homestay.name.includes(searchPhrase));
+    }
 
-    return (
-       
-    <Fragment>
-       <section className="filter-container">
-           <Title title="search homestays" />
-           <form className="filter-form">
-             {/*select type */}  
-            <div className="form-group">
-                <label htmlFor="type">room type</label>
-                <select 
-                name="type" 
-                id="type" 
-                value={homestays.type}
-                className="form-control"
-                onChange={handleChange}  
-                >
-                {types}  
-                </select>
-            </div>
-            <div className="form-group">
-                <label htmlFor="capacity">Guests</label>
-                <select 
-                name="capacity" 
-                id="capacity" 
-                value={homestays.capacity}
-                className="form-control"
-                onChange={handleChange}  
-                >
-                {cap}  
-                </select>
-            </div>
-           </form>
-       </section>
-       {/* !sortedhomestays || loading ? <Spinner /> :<>   */   
-       <section className="featured-rooms">
-        <div className='profiles'>
-            <div className="row">
-                 {sortedhomestays.length > 0 ? (
-                   sortedhomestays.map(stay => (
-                <div className="col-md-4 featured-responsive">
-                <SingleHomeStay key={stay._id} homestay={stay} />
-                </div>
-                    ))
-               ) : (
-              <h4>Unfortunately No homestays found for your search</h4>
-                  )}
-           </div>    
-       </div> 
-      </section> 
- 
-}
-</Fragment>  
-)
-}     
-      HomestayList.propTypes = {
-        getHomestays: PropTypes.func.isRequired,
-        homestay: PropTypes.object.isRequired
-      };
-      
-      const mapStateToProps = state => ({
-        homestay: state.homestay
-      });
-      export default connect(
-        mapStateToProps,
-        { getHomestays }
-      )(HomestayList);
-      
-      
+    setFilteredHomestays(tempHomestays);
+  }, [selectedType, selectedCapacity, searchPhrase]);
+
+  // homestay list-items
+  const listItems = filteredHomestays.map((homestay) =>
+    <li key={homestay._id}>
+      {homestay.name}
+    </li>
+  );
+
+  return (
+    <div>
+      <div className="filter-container">
+        <form className="form-group">
+          <div className="homestay-list__search">
+        <input
+          id="search"
+          type="text"
+          placeholder="Search Homestay"
+          onChange={event => handleChange(event)} />
+      </div>
+        </form>
+        <form className="form-group">
+          <label htmlFor="type">room type</label>
+          <select
+            name="type"
+            id="type"
+            value={selectedType}
+            className="form-control"
+            onChange={handleChange}
+          >
+            {types}
+          </select>
+        </form>
+        <form className="form-group">
+          <label htmlFor="type">capacity</label>
+          <select
+            name="capacity"
+            id="capacity"
+            value={selectedCapacity}
+            className="form-control"
+            onChange={handleChange}
+          >
+            {capacities}
+          </select>
+        </form>
+      </div>
+      <ul className="homestay-list">
+        {listItems}
+      </ul>
+    </div>
+  )
+};
+
+HomeStayList.propTypes = {
+  getHomestays: PropTypes.func.isRequired,
+  homestay: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  homestay: state.homestay
+});
+export default connect(
+  mapStateToProps, {
+    getHomestays
+  }
+)(HomeStayList);
