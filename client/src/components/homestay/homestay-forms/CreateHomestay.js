@@ -8,27 +8,31 @@ import axios from 'axios';
 
 const CreateHomestay = ({ createHomestay, history }) => {
     const [formData, setFormData ] = useState({
-        name: '',
-		price: '',
-		type: '',
-        capacity: '',
-        featured: '',
-        description:'',
-		aminities:'',
-		extras:[],
-		fileUpload: ''
+			name: '',
+			price: '',
+			type: '',
+			capacity: '',
+			featured: '',
+			description:'',
+			aminities:'',
+			extras:[],
+			fileUpload: '',
+			city: '',
+			country: '',
     });
-    
+
     const {
-        name,
-		price,
-		type,
-        capacity,
-        featured,
-        description,
-		aminities,
-		extras,
-		fileUpload
+			name,
+			price,
+			type,
+			capacity,
+			featured,
+			description,
+			aminities,
+			extras,
+			fileUpload,
+			city,
+			country,
     } = formData;
     const onChange = e =>
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -48,7 +52,7 @@ const CreateHomestay = ({ createHomestay, history }) => {
 		console.log('file', file);
 		const data = new FormData();
 		for(var i=0;i<file.length;i++) {
-			data.append('fileUpload', file[i]);			
+			data.append('fileUpload', file[i]);
 		}
 		// data.append('fileUpload', file)
 
@@ -110,7 +114,7 @@ const CreateHomestay = ({ createHomestay, history }) => {
 					<small className='form-text'>
 						Maximum no of people can stay on the property
 					</small>
-				</div>	
+				</div>
 				<div className='form-group'>
 					<input
 						type='text'
@@ -122,7 +126,31 @@ const CreateHomestay = ({ createHomestay, history }) => {
 					<small className='form-text'>
 						Prices are for each night on twin sharing basis
 					</small>
-				</div>	
+				</div>
+				<div className='form-group'>
+					<input
+						type='text'
+						placeholder='City'
+						name='city'
+						value={city}
+						onChange={e => onChange(e)}
+					/>
+					<small className='form-text'>
+						City
+					</small>
+				</div>
+				<div className='form-group'>
+					<input
+						type='text'
+						placeholder='country'
+						name='country'
+						value={country}
+						onChange={e => onChange(e)}
+					/>
+					<small className='form-text'>
+						country
+					</small>
+				</div>
 				<div className='form-group'>
 					<select
 						type='text'
@@ -134,7 +162,7 @@ const CreateHomestay = ({ createHomestay, history }) => {
 						<option value='0'>* Select your option</option>
 						<option value='Yes'>Yes</option>
 						<option value='No'>No</option>
-					</select>	
+					</select>
 					<small className='form-text'>
 						Is this property part of Featured properties?
 					</small>
@@ -162,7 +190,7 @@ const CreateHomestay = ({ createHomestay, history }) => {
 					<small className='form-text'>
 						like heater,kitchen,washine machine etc.
 					</small>
-				</div>	
+				</div>
 				<div className='form-group'>
 					<input
 						type='text'
@@ -188,7 +216,7 @@ const CreateHomestay = ({ createHomestay, history }) => {
 				<div className='form-group'>
 				{(fileUpload || []).map(url => (
 							<img  src={url} alt="fileArray" />
-						))}	
+						))}
 				</div>
             <input type='submit' className='btn btn-primary my-1' />
 				<Link className='btn btn-light my-1' to='/dashboard'>

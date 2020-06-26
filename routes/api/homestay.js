@@ -85,7 +85,7 @@ router.post('/', [auth, [
         not().
         isEmpty()
     ]],
-        
+
     async (req, res) => {
         console.log('req', req.body);
         const errors = validationResult(req);
@@ -103,7 +103,9 @@ router.post('/', [auth, [
             description,
             aminities,
             extras,
-            fileUpload
+            fileUpload,
+            city,
+            country,
         } = req.body;
 
         //build homestay object by check if data is really there
@@ -115,6 +117,8 @@ router.post('/', [auth, [
         if (capacity) homestayFields.capacity = capacity;
         if (featured) homestayFields.featured = featured;
         if (description) homestayFields.description = description;
+        if (city) homestayFields.city = city;
+        if (country) homestayFields.country = country;
         //if (product) {
         // profileFields.product = product.split(',').map(product => product.trim());
         //};

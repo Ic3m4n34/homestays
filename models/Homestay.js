@@ -27,14 +27,19 @@ const HomestaySchema = new mongoose.Schema({
   },
   aminities: {
     type: String
-    
   },
   extras: {
     type: String
   },
+  city: {
+    type: String
+  },
+  country: {
+    type: String
+  },
   file: {
           type: [String]
-     },  
+     },
 });
 
 module.exports = Homestay = mongoose.model('Homestay', HomestaySchema);
