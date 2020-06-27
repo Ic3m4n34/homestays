@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createHomestay } from '../../../actions/homestay';
 import axios from 'axios';
+import countryList from '../country-list.json';
 
 
 const CreateHomestay = ({ createHomestay, history }) => {
@@ -49,23 +50,26 @@ const CreateHomestay = ({ createHomestay, history }) => {
 		};
 
 		const file = event.target.files;
-		console.log('file', file);
 		const data = new FormData();
 		for(var i=0;i<file.length;i++) {
 			data.append('fileUpload', file[i]);
 		}
 		// data.append('fileUpload', file)
 
-		console.log('data is ', data);
 		const res = await axios.post('/api/upload/upload', data, config);
 
-		console.log('resi', res);
 
 		setFormData({
 			...formData,
 			fileUpload: res.data,
 		});
+
 	};
+	const parsedCountryList = countryList.map((country) =>
+		<option key={country.code}>
+      {country.name}
+		</option>);
+
     return (
 
         <Fragment>
@@ -140,13 +144,22 @@ const CreateHomestay = ({ createHomestay, history }) => {
 					</small>
 				</div>
 				<div className='form-group'>
-					<input
+					<select
 						type='text'
 						placeholder='country'
 						name='country'
 						value={country}
 						onChange={e => onChange(e)}
-					/>
+					>
+						{parsedCountryList}
+					</select>
+{/* 					<input
+						type='text'
+						placeholder='country'
+						name='country'
+						value={country}
+						onChange={e => onChange(e)}
+					/> */}
 					<small className='form-text'>
 						country
 					</small>

@@ -118,9 +118,24 @@ const HomeStayList = ({
     </li>
   );
 
+  // get current position
+  const getCurrentPosition = (e) => {
+    e.preventDefault();
+    navigator.geolocation.getCurrentPosition((position) => {
+      console.log(position)
+    });
+  };
+
   return (
     <div>
       <div className="filter-container">
+        <form className="form-group">
+         <button
+            onClick={getCurrentPosition}
+            class="geolocation__lookup">
+            Use GPS
+         </button>
+        </form>
         <form className="form-group">
           <div className="homestay-list__search">
         <input
