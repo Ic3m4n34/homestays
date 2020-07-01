@@ -2,6 +2,7 @@ import React, {  useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getHomestays } from '../../actions/homestay';
+import HomestayMap from './HomestayMap';
 
 const HomeStayList = ({
     getHomestays,
@@ -130,20 +131,19 @@ const HomeStayList = ({
     <div>
       <div className="filter-container">
         <form className="form-group">
-         <button
-            onClick={getCurrentPosition}
-            class="geolocation__lookup">
+          <button onClick={getCurrentPosition} class="geolocation__lookup">
             Use GPS
-         </button>
+          </button>
         </form>
         <form className="form-group">
           <div className="homestay-list__search">
-        <input
-          id="search"
-          type="text"
-          placeholder="Search Homestay"
-          onChange={event => handleChange(event)} />
-      </div>
+            <input
+              id="search"
+              type="text"
+              placeholder="Search Homestay"
+              onChange={(event) => handleChange(event)}
+            />
+          </div>
         </form>
         <form className="form-group">
           <label htmlFor="type">room type</label>
@@ -170,11 +170,12 @@ const HomeStayList = ({
           </select>
         </form>
       </div>
-      <ul className="homestay-list">
-        {listItems}
-      </ul>
+      <div className="homestay-list__map-list-container">
+        <ul className="homestay-list">{listItems}</ul>
+        <HomestayMap position={[51.3048576, 10.8167168]} />
+      </div>
     </div>
-  )
+  );
 };
 
 HomeStayList.propTypes = {

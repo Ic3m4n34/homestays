@@ -205,7 +205,7 @@ button {
 }
 
 .round-image {
-   
+
   max-width:400px;
   max-height:300px;
   background-color: white;
@@ -444,7 +444,9 @@ body {
 }
 
 .profile-grid .profile-top {
+  grid-row: 1;
   -ms-grid-row: 1;
+  grid-column: 1;
   -ms-grid-column: 1;
   -ms-grid-column-span: 2;
   grid-area: top;
@@ -461,7 +463,9 @@ body {
 }
 
 .profile-grid .profile-about {
+  grid-row: 2;
   -ms-grid-row: 2;
+  grid-column: 1;
   -ms-grid-column: 1;
   -ms-grid-column-span: 2;
   grid-area: about;
@@ -653,9 +657,9 @@ body {
 
     .light-bg {
               background: #f3f4f7; }
-            
+
     .dark-bg {
-              background: #252a33; }            
+              background: #252a33; }
 
 h6 {
          font-size: 21px;
@@ -684,7 +688,7 @@ h6 {
         -webkit-transform: translateX(-50%);
         -ms-transform: translateX(-50%);
         transform: translateX(-50%); }
-  
+
   .find-img-align {
     padding: 0 0 15px; }
     @media (max-width: 768px) {
@@ -745,7 +749,7 @@ h6 {
 /* ---------- Slider  ------*/
 /**************************************/
 
-.slider {  
+.slider {
   background: url(./img/18-13-25-slideshow_05_main.jpg) no-repeat;
   background-size: cover;
   min-height: 800px; }
@@ -864,7 +868,7 @@ h6 {
    ============================================================== */
    footer {
     position: relative; }
-  
+
   .copyright {
     text-align: center; }
     .copyright p {
@@ -892,7 +896,7 @@ h6 {
   /* ---------- Slider  ------*/
 /**************************************/
 
-.slider {  
+.slider {
   background: url(./img//18-13-25-slideshow_05_main.jpg) no-repeat;
   background-size: cover;
   min-height: 600px; }
@@ -1362,4 +1366,32 @@ h6 {
     max-width: 1170px;
   }
 }
-/* end of rooms fitler*/  
+/* end of rooms fitler*/
+
+/* homestay list */
+
+.homestay-list__map-list-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.homestay-list__map-list-container > div {
+  width: 100%;
+}
+
+.leaflet-container {
+  height: 500px;
+}
+
+@media screen and (min-width: 776px) {
+  .homestay-list__map-list-container {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .homestay-list__map-list-container > div {
+    width: 50%;
+  }
+}
+
+/* END homestay list */

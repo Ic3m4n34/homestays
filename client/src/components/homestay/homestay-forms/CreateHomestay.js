@@ -153,13 +153,6 @@ const CreateHomestay = ({ createHomestay, history }) => {
 					>
 						{parsedCountryList}
 					</select>
-{/* 					<input
-						type='text'
-						placeholder='country'
-						name='country'
-						value={country}
-						onChange={e => onChange(e)}
-					/> */}
 					<small className='form-text'>
 						country
 					</small>
