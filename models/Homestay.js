@@ -37,6 +37,9 @@ const HomestaySchema = new mongoose.Schema({
   country: {
     type: String
   },
+  homestayPosition: {
+    type: Array,
+  },
   file: {
           type: [String]
      },

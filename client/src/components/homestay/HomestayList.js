@@ -22,13 +22,17 @@ const HomeStayList = ({
   const [types, setTypes] = useState([]);
 
   // selected capacity
-  const [selectedCapacity, setSelectedCapacity] = useState('');
+  const [selectedCapacity, setSelectedCapacity] = useState(null);
 
   // capacities
   let [capacities, setCapacities] = useState(null);
 
   // set search phrase
   const [searchPhrase, setSearchPhrase] = useState('');
+
+  // user position
+  const [userPositon, setUserPositon] = useState([40.730610, -73.935242]);
+
   // state end
 
   // get all unique values
@@ -41,7 +45,6 @@ const HomeStayList = ({
       getHomestays();
     } else {
       setFilteredHomestays(homestays);
-      console.log('initial on load', filteredHomestays);
     }
     // get types + add all + map to jsx and state
     let uniqueTypes = getUnique(homestays, 'type');
@@ -75,12 +78,10 @@ const HomeStayList = ({
   }, [homestays]);
 
   const handleChange = (e) => {
-    const type = e.target.type;
+    // const type = e.target.type;
     const name = e.target.name;
     const value = e.target.value;
-    const isSearch = e.target.id === 'search';
-
-    console.log('type: ', type, 'name:', name, 'val:', value);
+    const isSearch = e.target.id === 'searchname';
 
     if (name === 'type') {
       setSelectedType(value);
@@ -89,24 +90,29 @@ const HomeStayList = ({
       setSelectedCapacity(parseInt(value));
     }
     if (isSearch) {
-      console.log('phrase', value);
       setSearchPhrase(value);
     }
   }
 
   useEffect(() => {
     let tempHomestays = [...homestays];
+    console.log('temp#####', tempHomestays);
 
     if (selectedType !== 'all') {
       tempHomestays = tempHomestays.filter(homestay => homestay.type === selectedType);
     }
 
-    if (selectedCapacity !== 0) {
+
+    console.log('selectedCapacity', selectedCapacity !== null);
+    if (selectedCapacity !==  null) {
+      console.log('filter', selectedCapacity);
       tempHomestays = tempHomestays.filter(homestay => homestay.capacity === selectedCapacity);
     }
 
     if (searchPhrase.length > 2) {
-      tempHomestays = tempHomestays.filter(homestay => homestay.name.includes(searchPhrase));
+      console.log('phrase', searchPhrase);
+      console.log('temp', tempHomestays);
+      tempHomestays = tempHomestays.filter(homestay => homestay.name.toLowerCase().includes(searchPhrase.toLowerCase()));
     }
 
     setFilteredHomestays(tempHomestays);
@@ -123,7 +129,7 @@ const HomeStayList = ({
   const getCurrentPosition = (e) => {
     e.preventDefault();
     navigator.geolocation.getCurrentPosition((position) => {
-      console.log(position)
+      setUserPositon([position.coords.latitude, position.coords.longitude])
     });
   };
 
@@ -131,14 +137,14 @@ const HomeStayList = ({
     <div>
       <div className="filter-container">
         <form className="form-group">
-          <button onClick={getCurrentPosition} class="geolocation__lookup">
+          <button onClick={getCurrentPosition} className="geolocation__lookup">
             Use GPS
           </button>
         </form>
         <form className="form-group">
           <div className="homestay-list__search">
             <input
-              id="search"
+              id="searchname"
               type="text"
               placeholder="Search Homestay"
               onChange={(event) => handleChange(event)}
@@ -172,7 +178,10 @@ const HomeStayList = ({
       </div>
       <div className="homestay-list__map-list-container">
         <ul className="homestay-list">{listItems}</ul>
-        <HomestayMap position={[51.3048576, 10.8167168]} />
+        <HomestayMap
+          position={userPositon}
+          homestaysOnMap={filteredHomestays}
+        />
       </div>
     </div>
   );

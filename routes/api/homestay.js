@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const axios = require('axios');
 const auth = require('../../middleware/auth');
 const {
     check,
@@ -119,9 +120,18 @@ router.post('/', [auth, [
         if (description) homestayFields.description = description;
         if (city) homestayFields.city = city;
         if (country) homestayFields.country = country;
-        //if (product) {
-        // profileFields.product = product.split(',').map(product => product.trim());
-        //};
+
+        // get homestay position
+        if (city) {
+            const cityDataRes = await axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${city}&key=bc7458ed668643d0b2697d606e31af88`);
+            const cityData = cityDataRes.data.results[0];
+
+            homestayFields.homestayPosition = [
+              cityData.geometry.lat,
+              cityData.geometry.lng,
+            ];
+        }
+
         if (aminities) homestayFields.aminities = aminities;
         if (extras) homestayFields.extras = extras;
         console.log('value of fileUpload Homestay while writing database ', fileUpload);
