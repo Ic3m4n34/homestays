@@ -29,14 +29,11 @@ export default function(state = initialState, action) {
             loading:false
         };
     case GET_HOMESTAYS:
-        console.log('hget em');
      // Get Featured Homestays
         let homestays = payload
         let featuredStays = []
         let maxPrice = Math.max(...homestays.map(item => item.price))
         let maxSize = Math.max(...homestays.map(item => item.capacity))
-        console.log('payload.length ', payload.length)
-        console.log('payload.length ', payload)
         for(var i=0;i<payload.length;i++) {
             if (payload[i].featured === 'Yes') {
                 featuredStays.push(payload[i])

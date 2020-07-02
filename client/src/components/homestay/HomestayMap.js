@@ -3,7 +3,7 @@ import { Map, Marker, TileLayer } from 'react-leaflet';
 import { homestayIcon } from '../../utils/map-icons';
 
 const HomestayMap = (props) => {
-  const { position, homestaysOnMap } = props;
+  const { position, userPosition, homestaysOnMap } = props;
 
   const [ markersOnMap, setMarkersOnMap ] = useState([]);
 
@@ -24,7 +24,7 @@ const HomestayMap = (props) => {
   return (
     <div className="homestay-map">
       <Map center={position} zoom="13">
-        <Marker position={position} />
+        <Marker position={userPosition} />
         <TileLayer
           attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

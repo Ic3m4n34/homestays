@@ -36,6 +36,7 @@ const HomeStayList = ({
 
   // user position
   const [mapPosition, setMapPosition] = useState([40.730610, -73.935242]);
+  const [userPosition, setUserPosition] = useState([40.730610, -73.935242]);
 
   // state end
 
@@ -82,7 +83,6 @@ const HomeStayList = ({
   }, [homestays]);
 
   const handleChange = (e) => {
-    // const type = e.target.type;
     const name = e.target.name;
     const value = e.target.value;
     const isSearchName = e.target.id === 'searchname';
@@ -138,6 +138,7 @@ const HomeStayList = ({
     setShowLoader(true);
     navigator.geolocation.getCurrentPosition((position) => {
       setMapPosition([position.coords.latitude, position.coords.longitude])
+      setUserPosition([position.coords.latitude, position.coords.longitude])
       setShowLoader(false);
     });
   };
@@ -206,6 +207,7 @@ const HomeStayList = ({
         <ul className="homestay-list">{listItems}</ul>
         <HomestayMap
           position={mapPosition}
+          userPosition={userPosition}
           homestaysOnMap={filteredHomestays}
         />
       </div>

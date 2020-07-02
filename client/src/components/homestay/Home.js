@@ -1,7 +1,6 @@
-import React, {  useEffect }  from 'react'
+import React, {  useEffect, useState }  from 'react'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import  { Spinner } from '../layout/Spinner';
 import { getHomestays } from '../../actions/homestay';
 // import  ProfileItem  from './ProfileItem';
 import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
@@ -13,12 +12,39 @@ import SingleHomeStay from './SingleHomeStay';
 import Title from './Title';
 
 const  Home = ({ getHomestays, homestay: { homestays,featuredhomestays:featured,loading } }) => {
+  const [searchPhraseName, setSearchPhraseName] = useState('');
+  const [filteredHomestays, setFilteredHomestays] = useState([]);
+
   useEffect(() => {
-    getHomestays();  
+    getHomestays();
   }, [getHomestays]);
-    
+
+  useEffect(() => {
+    setFilteredHomestays(featured);
+  }, [featured]);
+
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    const isSearchName = e.target.id === 'searchname';
+
+    if (isSearchName) {
+      setSearchPhraseName(value);
+    }
+  };
+
+  useEffect(() => {
+    let tempHomestays = [...featured];
+
+    if (searchPhraseName.length > 2) {
+      tempHomestays = tempHomestays.filter(homestay => homestay.name.toLowerCase().includes(searchPhraseName.toLowerCase()));
+    }
+
+    setFilteredHomestays(tempHomestays);
+  },[searchPhraseName])
+
   return (
-    
+
   <>
   <Hero>
     <Banner title="Luxurious HomeStays in Devbhoomi Uttarakhand"
@@ -26,15 +52,26 @@ const  Home = ({ getHomestays, homestay: { homestays,featuredhomestays:featured,
            <Link to='/homestays' className="btn btn-primary">
              Our Home Stays
            </Link>
-              </Banner> 
+              </Banner>
   </Hero>
   <Services />
+  <form className="form-group">
+    <div className="homestay-list__search homestay-list__search--name" >
+      <input
+        className="homestay-list__search--input"
+        id="searchname"
+        type="text"
+        placeholder="Search Homestay by name"
+        onChange={(event) => handleChange(event)}
+      />
+    </div>
+  </form>
   <section className="featured-rooms">
              <div className='profiles'>
                  <Title title="featured-rooms" />
                  <div className="row">
-                 {featured.length > 0 ? (
-                   featured.map(homestay => (
+                 {filteredHomestays.length > 0 ? (
+                   filteredHomestays.map(homestay => (
                 <div className="col-md-4 featured-responsive">
                 <SingleHomeStay key={homestay._id} homestay={homestay} />
                 </div>
@@ -43,8 +80,8 @@ const  Home = ({ getHomestays, homestay: { homestays,featuredhomestays:featured,
               <h4>No Featured homestays found...</h4>
                   )}
            </div>
-       </div> 
-      </section> 
+       </div>
+      </section>
   </>
 )
 }
