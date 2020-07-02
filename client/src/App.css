@@ -1394,4 +1394,122 @@ h6 {
   }
 }
 
+.geolocation__lookup {
+  border: none;
+  border-radius: 5px;
+  background: #27a4d6;
+  color: #ffffff;
+  padding: 12px;
+  display: flex;
+  flex-direction: row;
+}
+
+.geolocation__lookup:hover {
+  background: #1b89b5;
+}
+
+.geolocation__lookup:hover .gps-loader:after {
+  background: #1b89b5;
+}
+
+.homestay-list__searchboxes {
+  display: flex;
+  flex-direction: column;
+}
+
+.homestay-list__search--input {
+  min-width: 300px;
+  padding: 12px;
+  border-radius: 5px;
+  border: 1px solid #bfbdbd;
+}
+
+@media screen and (min-width: 776px) {
+  .homestay-list__searchboxes {
+    flex-direction: row;
+  }
+
+  .homestay-list__search--input {
+    margin-right: 36px;
+  }
+}
+
+.homestay-list__show-on-map {
+  color: #27a4d6;
+  text-decoration: underline;
+  margin-left: 12px;
+  cursor: pointer;
+}
+
+
+.gps-loader {
+  font-size: 10px;
+  margin-left: 12px;
+  text-indent: -9999em;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #ffffff;
+  background: -moz-linear-gradient(left, #ffffff 10%, rgba(255, 255, 255, 0) 42%);
+  background: -webkit-linear-gradient(left, #ffffff 10%, rgba(255, 255, 255, 0) 42%);
+  background: -o-linear-gradient(left, #ffffff 10%, rgba(255, 255, 255, 0) 42%);
+  background: -ms-linear-gradient(left, #ffffff 10%, rgba(255, 255, 255, 0) 42%);
+  background: linear-gradient(to right, #ffffff 10%, rgba(255, 255, 255, 0) 42%);
+  position: relative;
+  -webkit-animation: load3 1.4s infinite linear;
+  animation: load3 1.4s infinite linear;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+.gps-loader:before {
+  width: 50%;
+  height: 50%;
+  background: #ffffff;
+  border-radius: 100% 0 0 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: '';
+}
+
+.gps-loader:after {
+  background: #27a4d6;
+  width: 75%;
+  height: 75%;
+  border-radius: 50%;
+  content: '';
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+@-webkit-keyframes load3 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes load3 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
 /* END homestay list */

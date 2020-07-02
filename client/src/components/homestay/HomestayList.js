@@ -28,10 +28,14 @@ const HomeStayList = ({
   let [capacities, setCapacities] = useState(null);
 
   // set search phrase
-  const [searchPhrase, setSearchPhrase] = useState('');
+  const [searchPhraseName, setSearchPhraseName] = useState('');
+  const [searchPhraseCity, setSearchPhraseCity] = useState('');
+
+  // show loader
+  const [showLoader, setShowLoader] = useState(false);
 
   // user position
-  const [userPositon, setUserPositon] = useState([40.730610, -73.935242]);
+  const [mapPosition, setMapPosition] = useState([40.730610, -73.935242]);
 
   // state end
 
@@ -81,7 +85,8 @@ const HomeStayList = ({
     // const type = e.target.type;
     const name = e.target.name;
     const value = e.target.value;
-    const isSearch = e.target.id === 'searchname';
+    const isSearchName = e.target.id === 'searchname';
+    const isSearchCity = e.target.id === 'searchcity';
 
     if (name === 'type') {
       setSelectedType(value);
@@ -89,47 +94,51 @@ const HomeStayList = ({
     if (name === 'capacity' && value !== 0) {
       setSelectedCapacity(parseInt(value));
     }
-    if (isSearch) {
-      setSearchPhrase(value);
+    if (isSearchName) {
+      setSearchPhraseName(value);
+    }
+    if (isSearchCity) {
+      setSearchPhraseCity(value);
     }
   }
 
   useEffect(() => {
     let tempHomestays = [...homestays];
-    console.log('temp#####', tempHomestays);
 
     if (selectedType !== 'all') {
       tempHomestays = tempHomestays.filter(homestay => homestay.type === selectedType);
     }
 
-
-    console.log('selectedCapacity', selectedCapacity !== null);
     if (selectedCapacity !==  null) {
-      console.log('filter', selectedCapacity);
       tempHomestays = tempHomestays.filter(homestay => homestay.capacity === selectedCapacity);
     }
 
-    if (searchPhrase.length > 2) {
-      console.log('phrase', searchPhrase);
-      console.log('temp', tempHomestays);
-      tempHomestays = tempHomestays.filter(homestay => homestay.name.toLowerCase().includes(searchPhrase.toLowerCase()));
+    if (searchPhraseName.length > 2) {
+      tempHomestays = tempHomestays.filter(homestay => homestay.name.toLowerCase().includes(searchPhraseName.toLowerCase()));
+    }
+
+    if (searchPhraseCity.length > 2) {
+      tempHomestays = tempHomestays.filter(homestay => homestay.city.toLowerCase().includes(searchPhraseCity.toLowerCase()));
     }
 
     setFilteredHomestays(tempHomestays);
-  }, [selectedType, selectedCapacity, searchPhrase]);
+  }, [selectedType, selectedCapacity, searchPhraseName, searchPhraseCity]);
 
   // homestay list-items
   const listItems = filteredHomestays.map((homestay) =>
     <li key={homestay._id}>
       {homestay.name}
+      <span className="homestay-list__show-on-map" onClick={() => setMapPosition(homestay.homestayPosition)}>show on map</span>
     </li>
   );
 
   // get current position
   const getCurrentPosition = (e) => {
     e.preventDefault();
+    setShowLoader(true);
     navigator.geolocation.getCurrentPosition((position) => {
-      setUserPositon([position.coords.latitude, position.coords.longitude])
+      setMapPosition([position.coords.latitude, position.coords.longitude])
+      setShowLoader(false);
     });
   };
 
@@ -139,18 +148,35 @@ const HomeStayList = ({
         <form className="form-group">
           <button onClick={getCurrentPosition} className="geolocation__lookup">
             Use GPS
+            {
+              showLoader ? <div className="gps-loader"></div> : ''
+            }
           </button>
         </form>
-        <form className="form-group">
-          <div className="homestay-list__search">
+        <div className="homestay-list__searchboxes">
+          <form className="form-group">
+          <div className="homestay-list__search homestay-list__search--name" >
             <input
+              className="homestay-list__search--input"
               id="searchname"
               type="text"
-              placeholder="Search Homestay"
+              placeholder="Search Homestay by name"
               onChange={(event) => handleChange(event)}
             />
           </div>
         </form>
+        <form className="form-group">
+          <div className="homestay-list__search homestay-list__search--city" >
+            <input
+              className="homestay-list__search--input"
+              id="searchcity"
+              type="text"
+              placeholder="Search Homestay by city"
+              onChange={(event) => handleChange(event)}
+            />
+          </div>
+        </form>
+        </div>
         <form className="form-group">
           <label htmlFor="type">room type</label>
           <select
@@ -179,7 +205,7 @@ const HomeStayList = ({
       <div className="homestay-list__map-list-container">
         <ul className="homestay-list">{listItems}</ul>
         <HomestayMap
-          position={userPositon}
+          position={mapPosition}
           homestaysOnMap={filteredHomestays}
         />
       </div>
