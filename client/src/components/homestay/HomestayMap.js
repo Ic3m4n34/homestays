@@ -9,7 +9,6 @@ const HomestayMap = (props) => {
 
   useEffect(() => {
     const homestaysWithCoords = homestaysOnMap.filter(homestay => homestay.homestayPosition.length === 2);
-    console.log('coords. ', homestaysWithCoords);
 
     const markersOnMap = homestaysWithCoords.map((homestayOnMap) => (
       <Marker
@@ -23,7 +22,7 @@ const HomestayMap = (props) => {
 
   return (
     <div className="homestay-map">
-      <Map center={position} zoom="13">
+      <Map center={position} zoom="11">
         <Marker position={userPosition} />
         <TileLayer
           attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

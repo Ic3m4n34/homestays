@@ -50,6 +50,14 @@ const HomeStayList = ({
       getHomestays();
     } else {
       setFilteredHomestays(homestays);
+      /* const testDiff = getDistanceFromLatLonInKm(
+        homestays[8].homestayPosition[0],
+        homestays[8].homestayPosition[1],
+        homestays[9].homestayPosition[0],
+        homestays[9].homestayPosition[1],
+      );
+
+      console.log('test', testDiff); */
     }
     // get types + add all + map to jsx and state
     let uniqueTypes = getUnique(homestays, 'type');
@@ -83,6 +91,8 @@ const HomeStayList = ({
   }, [homestays]);
 
   const handleChange = (e) => {
+    e.preventDefault();
+    const id = e.target.id;
     const name = e.target.name;
     const value = e.target.value;
     const isSearchName = e.target.id === 'searchname';
@@ -100,10 +110,23 @@ const HomeStayList = ({
     if (isSearchCity) {
       setSearchPhraseCity(value);
     }
+    if (id === 'gpslookup') {
+      setSearchPhraseCity('');
+      getCurrentPosition();
+    }
   }
 
   useEffect(() => {
     let tempHomestays = [...homestays];
+
+    if (userPosition) {
+      tempHomestays = tempHomestays.filter(homestay => getDistanceFromLatLonInKm(userPosition[0], userPosition[1], homestay.homestayPosition[0], homestay.homestayPosition[1]) < 20);
+    }
+
+    if (searchPhraseCity.length > 2) {
+      tempHomestays = [...homestays];
+      tempHomestays = tempHomestays.filter(homestay => homestay.city.toLowerCase().includes(searchPhraseCity.toLowerCase()));
+    }
 
     if (selectedType !== 'all') {
       tempHomestays = tempHomestays.filter(homestay => homestay.type === selectedType);
@@ -117,12 +140,8 @@ const HomeStayList = ({
       tempHomestays = tempHomestays.filter(homestay => homestay.name.toLowerCase().includes(searchPhraseName.toLowerCase()));
     }
 
-    if (searchPhraseCity.length > 2) {
-      tempHomestays = tempHomestays.filter(homestay => homestay.city.toLowerCase().includes(searchPhraseCity.toLowerCase()));
-    }
-
     setFilteredHomestays(tempHomestays);
-  }, [selectedType, selectedCapacity, searchPhraseName, searchPhraseCity]);
+  }, [selectedType, selectedCapacity, searchPhraseName, searchPhraseCity, userPosition]);
 
   // homestay list-items
   const listItems = filteredHomestays.map((homestay) =>
@@ -133,8 +152,7 @@ const HomeStayList = ({
   );
 
   // get current position
-  const getCurrentPosition = (e) => {
-    e.preventDefault();
+  const getCurrentPosition = () => {
     setShowLoader(true);
     navigator.geolocation.getCurrentPosition((position) => {
       setMapPosition([position.coords.latitude, position.coords.longitude])
@@ -143,17 +161,49 @@ const HomeStayList = ({
     });
   };
 
+  // calculate distance
+  const deg2rad = (deg) => {
+    return deg * (Math.PI / 180)
+  };
+
+  const getDistanceFromLatLonInKm = (lat1, lon1, lat2, lon2) => {
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2 - lat1); // deg2rad below
+    var dLon = deg2rad(lon2 - lon1);
+    var a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c; // Distance in km
+    return d;
+  };
+
   return (
     <div>
       <div className="filter-container">
-        <form className="form-group">
-          <button onClick={getCurrentPosition} className="geolocation__lookup">
-            Use GPS
-            {
-              showLoader ? <div className="gps-loader"></div> : ''
-            }
-          </button>
-        </form>
+        <div className="homestay-list__location-search">
+          <form className="form-group">
+            <button onClick={(event) => handleChange(event)} className="geolocation__lookup" id="gpslookup">
+              Use GPS
+              {
+                showLoader ? <div className="gps-loader"></div> : ''
+              }
+            </button>
+          </form>
+            <div className="form-group">
+            <div className="homestay-list__search homestay-list__search--city" >
+              <input
+                className="homestay-list__search--input"
+                id="searchcity"
+                type="text"
+                placeholder="Search Homestay by city"
+                value={searchPhraseCity}
+                onChange={(event) => handleChange(event)}
+              />
+            </div>
+          </div>
+        </div>
         <div className="homestay-list__searchboxes">
           <form className="form-group">
           <div className="homestay-list__search homestay-list__search--name" >
@@ -162,17 +212,6 @@ const HomeStayList = ({
               id="searchname"
               type="text"
               placeholder="Search Homestay by name"
-              onChange={(event) => handleChange(event)}
-            />
-          </div>
-        </form>
-        <form className="form-group">
-          <div className="homestay-list__search homestay-list__search--city" >
-            <input
-              className="homestay-list__search--input"
-              id="searchcity"
-              type="text"
-              placeholder="Search Homestay by city"
               onChange={(event) => handleChange(event)}
             />
           </div>
