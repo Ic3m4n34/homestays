@@ -10,10 +10,12 @@ const HomeStayList = ({
       homestays,
       sortedhomestays,
       loading
-    }
+    },
+    queryCoordinates,
   }) => {
   // state
-  const [ filteredHomestays, setFilteredHomestays ] = useState([]);
+  const [filteredHomestays, setFilteredHomestays] = useState([]);
+  const [locationFilteredHomestays, setLocationFilteredHomestays] = useState([]);
 
   // selected room type
   let [selectedType, setSelectedType] = useState('all');
@@ -35,8 +37,8 @@ const HomeStayList = ({
   const [showLoader, setShowLoader] = useState(false);
 
   // user position
-  const [mapPosition, setMapPosition] = useState([40.730610, -73.935242]);
-  const [userPosition, setUserPosition] = useState([40.730610, -73.935242]);
+  const [mapPosition, setMapPosition] = useState(queryCoordinates);
+  const [userPosition, setUserPosition] = useState(queryCoordinates);
 
   // state end
 
@@ -49,15 +51,9 @@ const HomeStayList = ({
     if (homestays.length < 1) {
       getHomestays();
     } else {
-      setFilteredHomestays(homestays);
-      /* const testDiff = getDistanceFromLatLonInKm(
-        homestays[8].homestayPosition[0],
-        homestays[8].homestayPosition[1],
-        homestays[9].homestayPosition[0],
-        homestays[9].homestayPosition[1],
-      );
+      const locationFilteredHomestays = homestays.filter(homestay => getDistanceFromLatLonInKm(userPosition[0], userPosition[1], homestay.homestayPosition[0], homestay.homestayPosition[1]) < 20);
 
-      console.log('test', testDiff); */
+      setLocationFilteredHomestays(locationFilteredHomestays);
     }
     // get types + add all + map to jsx and state
     let uniqueTypes = getUnique(homestays, 'type');
@@ -92,11 +88,11 @@ const HomeStayList = ({
 
   const handleChange = (e) => {
     e.preventDefault();
-    const id = e.target.id;
+    // const id = e.target.id;
     const name = e.target.name;
     const value = e.target.value;
     const isSearchName = e.target.id === 'searchname';
-    const isSearchCity = e.target.id === 'searchcity';
+    // const isSearchCity = e.target.id === 'searchcity';
 
     if (name === 'type') {
       setSelectedType(value);
@@ -107,26 +103,29 @@ const HomeStayList = ({
     if (isSearchName) {
       setSearchPhraseName(value);
     }
-    if (isSearchCity) {
+    /* if (isSearchCity) {
       setSearchPhraseCity(value);
-    }
-    if (id === 'gpslookup') {
+    } */
+    /* if (id === 'gpslookup') {
       setSearchPhraseCity('');
       getCurrentPosition();
-    }
+    } */
   }
 
   useEffect(() => {
-    let tempHomestays = [...homestays];
+    let tempHomestays = [...locationFilteredHomestays];
+    console.log('temp', tempHomestays);
 
-    if (userPosition) {
+    /* if (userPosition) {
+      console.log('up', userPosition);
       tempHomestays = tempHomestays.filter(homestay => getDistanceFromLatLonInKm(userPosition[0], userPosition[1], homestay.homestayPosition[0], homestay.homestayPosition[1]) < 20);
+      console.log('temp', tempHomestays);
     }
 
     if (searchPhraseCity.length > 2) {
       tempHomestays = [...homestays];
       tempHomestays = tempHomestays.filter(homestay => homestay.city.toLowerCase().includes(searchPhraseCity.toLowerCase()));
-    }
+    } */
 
     if (selectedType !== 'all') {
       tempHomestays = tempHomestays.filter(homestay => homestay.type === selectedType);
@@ -141,7 +140,7 @@ const HomeStayList = ({
     }
 
     setFilteredHomestays(tempHomestays);
-  }, [selectedType, selectedCapacity, searchPhraseName, searchPhraseCity, userPosition]);
+  }, [selectedType, selectedCapacity, searchPhraseName, locationFilteredHomestays]);
 
   // homestay list-items
   const listItems = filteredHomestays.map((homestay) =>

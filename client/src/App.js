@@ -38,7 +38,7 @@ const App = () => {
 <Provider store={store}>
 <Router>
   <Fragment>
-   <Navbar /> 
+   <Navbar />
     <Route exact path='/' component={Landing} />
     <section className="container">
       <Alert />
@@ -48,10 +48,10 @@ const App = () => {
       <Route exact path="/profiles" component={Profiles} />
       <Route exact path="/profile/:id" component={Profile} />
       <Route exact path="/search" component={Search} />
-      <Route exact path="/homestays" component={HomeStays} />
+      <Route exact path="/homestays/:userCoords" component={HomeStays} />
       <Route exact path="/homestay/:id" component={HomeStay} />
       <Route exact path="/homestay" component={Home} />
-      
+
       <PrivateRoute exact path="/dashboard" component={Dashboard} />
       <PrivateRoute exact path="/create-profile" component={CreateProfile} />
       <PrivateRoute exact path="/edit-profile" component={EditProfile} />

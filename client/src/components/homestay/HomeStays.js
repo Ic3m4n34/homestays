@@ -5,7 +5,9 @@ import { Link } from  'react-router-dom';
 import HomestayContainer from './HomestayContainer';
 
 
-const HomeStays = () => {
+const HomeStays = ({ match, location }) => {
+  const queryCoordinates = match.params.userCoords.split(',').map(coord => parseFloat(coord));
+
   return (
   <>
     <Hero>
@@ -15,7 +17,7 @@ const HomeStays = () => {
         </Link>
       </Banner>
     </Hero>
-    <HomestayContainer></HomestayContainer>
+    <HomestayContainer queryCoordinates={queryCoordinates}></HomestayContainer>
   </>
   )
 }
