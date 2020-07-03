@@ -1518,4 +1518,24 @@ h6 {
   flex-direction: row;
 }
 
+#searchcity {
+  background: url('/search.png');
+  background-repeat: no-repeat;
+  background-position: 95% center;
+}
+
+.homestay-marker {
+  background: #fff;
+  color: #000;
+  font-size: 18px;
+  padding: 12px;
+}
+
+.leaflet-marker-icon {
+  width: auto!important;
+  height: auto!important;
+  padding: 6px;
+  border-radius: 5px;
+}
+
 /* END homestay list */

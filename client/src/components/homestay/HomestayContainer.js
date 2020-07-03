@@ -2,12 +2,12 @@ import React from 'react'
 import HomestayFilter from './HomestayFilter';
 import HomestayList from './HomestayList';
 
-const HomeStays = ({ queryCoordinates }) => {
+const HomeStays = ({ searchQuery }) => {
   return (
     <div>
       Hello from HomeStays container
       <HomestayFilter />
-      <HomestayList queryCoordinates={queryCoordinates} />
+      <HomestayList searchQuery={searchQuery} />
     </div>
   )
 }

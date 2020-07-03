@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Map, Marker, TileLayer } from 'react-leaflet';
-import { homestayIcon } from '../../utils/map-icons';
+import { Map, TileLayer } from 'react-leaflet';
+import Marker from 'react-leaflet-enhanced-marker';
+import HomestayMarker from './HomestayMarker';
 
 const HomestayMap = (props) => {
   const { position, userPosition, homestaysOnMap } = props;
@@ -12,7 +13,8 @@ const HomestayMap = (props) => {
 
     const markersOnMap = homestaysWithCoords.map((homestayOnMap) => (
       <Marker
-        icon={homestayIcon}
+        className="marker-container"
+        icon={<HomestayMarker price={homestayOnMap.price} />}
         position={homestayOnMap.homestayPosition}
         key={homestayOnMap.homestayPosition[0]}
       />
@@ -22,7 +24,7 @@ const HomestayMap = (props) => {
 
   return (
     <div className="homestay-map">
-      <Map center={position} zoom="11">
+      <Map center={position} zoom="14">
         <Marker position={userPosition} />
         <TileLayer
           attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

@@ -12,5 +12,5 @@ const homestayIcon = new L.Icon({
 });
 
 export {
-  homestayIcon
+  homestayIcon,
 };

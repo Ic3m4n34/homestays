@@ -5,8 +5,16 @@ import { Link } from  'react-router-dom';
 import HomestayContainer from './HomestayContainer';
 
 
-const HomeStays = ({ match, location }) => {
-  const queryCoordinates = match.params.userCoords.split(',').map(coord => parseFloat(coord));
+const HomeStays = ({ match }) => {
+  let searchQuery = {};
+
+  if (match.params.searchQuery) {
+    if (match.params.searchQuery.includes(',')) {
+      searchQuery.queryCoordinates = match.params.searchQuery.split(',').map(coord => parseFloat(coord));
+    } else {
+      searchQuery.cityName = match.params.searchQuery;
+    }
+  }
 
   return (
   <>
@@ -17,7 +25,7 @@ const HomeStays = ({ match, location }) => {
         </Link>
       </Banner>
     </Hero>
-    <HomestayContainer queryCoordinates={queryCoordinates}></HomestayContainer>
+    <HomestayContainer searchQuery={searchQuery}></HomestayContainer>
   </>
   )
 }
