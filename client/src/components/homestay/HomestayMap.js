@@ -28,7 +28,7 @@ const HomestayMap = (props) => {
         <Marker position={userPosition} />
         <TileLayer
           attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          url = "https://api.mapbox.com/styles/v1/ic3m4n/ckc7kqx3u1rga1jpfdu7wg7e5/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiaWMzbTRuIiwiYSI6ImNrYzdrd3FuMzEyYnYydnJpbHVya2cxdmgifQ.JAzvV8e2Igsn6YFhKIGSQA"
         />
         {markersOnMap}
       </Map>
