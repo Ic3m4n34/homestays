@@ -1429,10 +1429,6 @@ h6 {
   .homestay-list__searchboxes {
     flex-direction: row;
   }
-
-  .homestay-list__search--input {
-    margin-right: 36px;
-  }
 }
 
 .homestay-list__show-on-map {
@@ -1518,12 +1514,6 @@ h6 {
   flex-direction: row;
 }
 
-#searchcity {
-  background: url('/search.png');
-  background-repeat: no-repeat;
-  background-position: 95% center;
-}
-
 .homestay-marker {
   background: #fff;
   color: #000;
@@ -1536,6 +1526,30 @@ h6 {
   height: auto!important;
   padding: 6px;
   border-radius: 5px;
+}
+
+.homestay-list__search--city {
+  display: flex;
+  flex-direction: row;
+}
+
+.search-city__btn {
+  border: none;
+  border-radius: 5px;
+  background: #27a4d6;
+  color: #ffffff;
+  padding: 12px;
+  display: flex;
+  flex-direction: row;
+  margin-left: 12px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-city__btn--icon {
+  display: block;
 }
 
 /* END homestay list */

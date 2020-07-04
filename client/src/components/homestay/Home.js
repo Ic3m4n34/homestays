@@ -62,7 +62,11 @@ const  Home = ({ getHomestays, homestay: { homestays,featuredhomestays:featured,
     }
 
     setFilteredHomestays(tempHomestays);
-  },[searchPhraseName])
+  },[searchPhraseName]);
+
+  const searchHomestaysByCity = () => {
+    history.push(`/homestays/${searchPhraseCity}`);
+  };
 
   const handleKeyPress = (e) => {
     if (e.charCode === 13) {
@@ -112,6 +116,14 @@ const  Home = ({ getHomestays, homestay: { homestays,featuredhomestays:featured,
           onChange={(event) => handleChange(event)}
           onKeyPress={(event) => handleKeyPress(event)}
         />
+        <button
+          onClick = {
+            searchHomestaysByCity
+          }
+          class="search-city__btn"
+        >
+          <img src="/search--white.png" className="search-city__btn--icon" alt="search" />
+        </button>
       </div>
     </div>
   </div>
